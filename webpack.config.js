@@ -1,24 +1,28 @@
-export const mode = "development";
-export const entry = './src/main.js';
-export const output = {
-    path: `${__dirname}/dist`,
-    filename: 'bundle.js',
-};
-export const module = {
-    rules: [
-        {
-            test: /\.js$/,
-            use: [
-                {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            ['env', { 'modules': false }],
-                            'react'
-                        ]
+module.exports = {
+    mode: 'development',
+    entry: __dirname + "/src/index.js",
+    watch: true,
+    output: {
+        path: __dirname + "/public/javascript",
+        filename: "bundle.js"
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                use: [
+                    {
+                        loader: "babel-loader",
+                        options: {
+                            presets: [
+                                ["env", {"modules": false}],
+                                "react"
+                            ]
+                        }
                     }
-                }
-            ]
-        }
-    ]
-};
+                ],
+                exclude: /node_modules/,
+            }
+        ]
+    }
+}
