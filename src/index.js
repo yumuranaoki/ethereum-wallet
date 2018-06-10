@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import Typography from '@material-ui/core/Typography';
+import BlockNumber from './component/blockNumber';
+import Balance from './component/balance';
+import CreateAddress from './component/createAddress';
 
 class App extends Component {
     constructor(props) {
@@ -8,7 +12,14 @@ class App extends Component {
     
     render() {
         return(
-            <h1>Hello React</h1>
+            <div>
+                <Typography variant="display3">
+                    Ethereum wallet
+                </Typography>
+                <BlockNumber />
+                <Balance />
+                <CreateAddress />
+            </div>
         );
     }
 }
