@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import cyan from '@material-ui/core/colors/cyan';
 
 class Balance extends Component {
     constructor(props) {
@@ -23,8 +24,7 @@ class Balance extends Component {
             "params":[this.state.address, "latest"],
             "id":1
         }
-        console.log(ethGetBalance);
-
+        
         fetch('https://mainnet.infura.io/Y80MvxYEzKUddrYMy9Xj', {
             method: 'POST',
             body: JSON.stringify(ethGetBalance),
@@ -51,6 +51,11 @@ class Balance extends Component {
             },
             forSmall: {
                 marginTop: 10
+            },
+            button: {
+                backgroundColor: cyan[200],
+                color: 'white',
+                borderColor: cyan[300],
             }
         }
 
@@ -64,9 +69,8 @@ class Balance extends Component {
                 />
                 <Button
                     variant="outlined"
-                    color='primary'
                     onClick={() => this.getBalance()}
-                    style={styles.inline}
+                    style={Object.assign({}, styles.inline, styles.button)}
                 >
                     get balance
                 </Button>
