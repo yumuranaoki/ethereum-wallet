@@ -14,7 +14,7 @@ class Wallet {
     }
 
     generatePrivateKey() {
-        const character = "abcdefABCDEF0123456789";
+        const character = "abcdef0123456789";
         const characterLength = character.length;                
         for(let i=0; i<64; i++){
             this.privateKey += character[Math.floor(Math.random()*characterLength)];
@@ -23,11 +23,20 @@ class Wallet {
     }
 
     generatePublicKey() {
-        this.publicKey = ecdsa.keyFromPrivate(this.privateKey, 'hex');
+        this.publicKey = ecdsa.keyFromPrivate(this.privateKey, 'hex').pub;
     }
 
     generateAddress() {
-
+        address = keccak256(this.publicKey).slice(24);
+        keccak256Address = keccak256(address)
+        for (let i = 0; i<32; i++) {
+            if (parseInt(keccak256Address[i], 16) >=　8 && !Number(address[i])) {
+                this.address += address[i].toUpperCase();
+            } else {
+                this.address += address[i];
+            }
+        }
+        this.address = '0x' + this.address;
     }
 }
 

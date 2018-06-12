@@ -10,9 +10,7 @@ class CreateAddress extends Component {
     generatePrivateKey() {
         const wallet = new Wallet();
         wallet.generatePrivateKey();
-        wallet.generatePublicKey();
-        console.log(wallet.privateKey);
-        console.log(wallet.publicKey);
+        console.log(wallet.privateKey); 
     }
 
     render() {
