@@ -1,5 +1,8 @@
 import { ec } from 'elliptic';
 import { keccak256 } from 'js-sha3';
+import crypto from 'crypto';
+import eccrypto from 'eccrypto';
+import BN from 'bn.js';
 
 const ecdsa = new ec('secp256k1');
 
@@ -11,6 +14,7 @@ class Wallet {
         this.address = '';
         this.generatePrivateKey = this.generatePrivateKey.bind(this);
         this.generatePublicKey = this.generatePublicKey.bind(this);
+        this.generateAddress = this.generateAddress.bind(this);
     }
 
     generatePrivateKey() {
@@ -18,18 +22,18 @@ class Wallet {
         const characterLength = character.length;                
         for(let i=0; i<64; i++){
             this.privateKey += character[Math.floor(Math.random()*characterLength)];
-        }
-        this.privateKey = "0x" + this.privateKey;
+        } 
+        this.privateKey = Buffer.from(this.privateKey, 'hex');
     }
 
     generatePublicKey() {
-        this.publicKey = ecdsa.keyFromPrivate(this.privateKey, 'hex').pub;
+        this.publicKey = eccrypto.getPublic(this.privateKey);
     }
 
     generateAddress() {
-        address = keccak256(this.publicKey).slice(24);
-        keccak256Address = keccak256(address)
-        for (let i = 0; i<32; i++) {
+        const address = keccak256(this.publicKey.slice(1)).slice(24);
+        const keccak256Address = keccak256(address)
+        for (let i = 0; i<40; i++) {
             if (parseInt(keccak256Address[i], 16) >=　8 && !Number(address[i])) {
                 this.address += address[i].toUpperCase();
             } else {

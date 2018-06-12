@@ -25,6 +25,8 @@
   },
   "dependencies": {
     "@material-ui/core": "^1.2.1",
+    "bn.js": "^4.11.8",
+    "crypto": "^1.0.1",
     "eccrypto": "^1.0.3",
     "ejs": "^2.6.1",
     "elliptic": "^6.4.0",
