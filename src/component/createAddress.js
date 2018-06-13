@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import Wallet from '../util/wallet';
+import Wallet from '../wallet/index';
 
 class CreateWallet extends Component {
     constructor(props) {
@@ -12,6 +12,10 @@ class CreateWallet extends Component {
         wallet.generatePrivateKey();
         wallet.generatePublicKey();
         wallet.generateAddress();
+        wallet.setTransaction();
+        wallet.setSignedTransaction();
+        console.log(wallet.privateKey)
+        wallet.sendRawTransaction();
     }
 
     render() {
