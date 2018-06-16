@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import cyan from '@material-ui/core/colors/cyan';
 import { walletContext } from '../index';
+import Wallet from '../wallet/index';
 
 //SendTransaction用のContextを作成する
 class SendTransaction extends Component {
@@ -12,8 +13,9 @@ class SendTransaction extends Component {
         this.state = {
             toAddress: '',
             value: '',
-            gasLimit: '',
-            gasPrice: '',
+            gasLimit: 21000,
+            gasPrice: 4000000000,
+            chainId: 3, //あとで選択可能に
             result: '',
         };
     }
@@ -35,8 +37,16 @@ class SendTransaction extends Component {
         }
     }
 
-    sendTransaction() {
-        
+    sendTransaction(wallet) {
+        const txParams = {
+            gasLimit: this.state.gasLimit,
+            gasPrice: this.state.gasPrice,
+            toAddress: this.state.toAddress,
+            value: this.state.value,
+            chainId: this.state.chainId,
+        }
+        console.log(txParams);
+        wallet.sendRawTransaction(txParams);
     }
 
     render() {
@@ -62,7 +72,7 @@ class SendTransaction extends Component {
 
         return(
             <walletContext.Consumer>
-                {({sendTransaction}) => (
+                {({wallet}) => (
                     <div style={styles.wrap}>
                         <TextField 
                             label="to address"
@@ -90,7 +100,7 @@ class SendTransaction extends Component {
                         />
                         <Button
                             variant="outlined"
-                            onClick={sendTransaction}
+                            onClick={() => this.sendTransaction(wallet)}
                             style={Object.assign({}, styles.inline, styles.button)}
                         >
                             send transaction

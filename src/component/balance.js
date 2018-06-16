@@ -23,10 +23,10 @@ class Balance extends Component {
             "jsonrpc":"2.0",
             "method":"eth_getBalance",
             "params":[this.state.address, "latest"],
-            "id":1
+            "id":3
         }
         
-        fetch('https://mainnet.infura.io/Y80MvxYEzKUddrYMy9Xj', {
+        fetch('https://ropsten.infura.io/Y80MvxYEzKUddrYMy9Xj', {
             method: 'POST',
             body: JSON.stringify(ethGetBalance),
             headers: new Headers({

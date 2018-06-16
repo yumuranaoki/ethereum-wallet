@@ -10,7 +10,7 @@ class CreateWallet extends Component {
     render() {
         return(
             <walletContext.Consumer>
-                {({generateWallet}) => (
+                {({wallet, generateWallet}) => (
                     <div>
                         <Button
                             variant="contained"
@@ -19,6 +19,7 @@ class CreateWallet extends Component {
                         >
                             CREATE ADDRESS
                         </Button>
+                        address: {wallet.address}
                     </div>
                 )}
             </walletContext.Consumer>

@@ -5,10 +5,6 @@ class Context extends Component {
     constructor(props) {
         super(props);
 
-        /*
-        wallet/index.js内で、privateKey, publicKey, addressをまとめて作成するメソッドを作成して、
-        それだけをpropertyに持ったobjectをretunさせて、generateWallet内の3つのメソッドをまとめる。
-        */
         this.generateWallet = () => {
             const wallet = new Wallet();
             wallet.generatePrivateKey();
@@ -23,10 +19,10 @@ class Context extends Component {
                     "jsonrpc":"2.0",
                     "method":"eth_getBalance",
                     "params":[this.state.wallet.address, "latest"],
-                    "id":1
+                    "id":3
                 }
                 
-                fetch('https://mainnet.infura.io/Y80MvxYEzKUddrYMy9Xj', {
+                fetch('https://ropsten.infura.io/Y80MvxYEzKUddrYMy9Xj', {
                     method: 'POST',
                     body: JSON.stringify(ethGetBalance),
                     headers: new Headers({
@@ -51,7 +47,9 @@ class Context extends Component {
         }
 
         this.state = {
-            wallet: null,
+            wallet: {
+                address: '',
+            },
             balance: null,
             generateWallet: this.generateWallet,
             getBalance: this.getBalance,

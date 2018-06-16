@@ -20,9 +20,12 @@ class BlockNumber extends Component {
             })
         })
         .then(res => res.json())
+        .then(res => console.log(res))
+        /*
         .then(res => res.result)
         .then(result => parseInt(result, 16))
         .then(result => this.setState({blockNumber: result}))
+        */
         .catch(err => console.log(error));
     }
 

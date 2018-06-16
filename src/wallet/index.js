@@ -1,7 +1,6 @@
 import { ec } from 'elliptic';
 import { keccak256 } from 'js-sha3';
 import eccrypto from 'eccrypto';
-import BN from 'bn.js';
 import EthereumTx from 'ethereumjs-tx';
 import 'babel-polyfill';
 
@@ -14,11 +13,6 @@ class Wallet {
         this.privateKey = '';
         this.publicKey = '';
         this.address = '';
-        this.transactions = [];
-        this.signedTransactions = [];
-        this.generatePrivateKey = this.generatePrivateKey.bind(this);
-        this.generatePublicKey = this.generatePublicKey.bind(this);
-        this.generateAddress = this.generateAddress.bind(this);
     }
 
     generatePrivateKey() {
@@ -70,54 +64,44 @@ class Wallet {
         })
     }
 
-    async setTransaction(txParams) {
-        if (this.address) {
+    async signTransaction(txParams) {
+        if (this.privateKey) {
             let transaction = {}
             let nonce = await this.getNonce()
-            console.log(nonce);
             transaction.nonce = nonce;
-            transaction.gasPrice = '0x' + (1000000000).toString(16);
-            transaction.gasLimit = '0x' + (21000).toString(16);
-            transaction.to = '';
-            transaction.value = '';
-            transaction.data = '';
-            transaction.chainId = '';
-            this.transactions.push(transaction);
-        }
-    }
-
-    async signTransaction() {
-        if (this.privateKey) {
+            transaction.gasPrice = '0x' + parseInt(txParams.gasPrice, 10).toString(16);
+            transaction.gasLimit = '0x' + parseInt(txParams.gasLimit, 10).toString(16);
+            transaction.to = txParams.toAddress;
+            transaction.value = '0x' + parseInt(txParams.value, 10).toString(16);
+            transaction.chainId = txParams.chainId;
             return new Promise(resolve => {
-                let tx = new EthereumTx(this.transactions[0]);
+                let tx = new EthereumTx(transaction);
                 tx.sign(this.privateKey);
                 resolve(tx);
             })
         }
     }
 
-    async setSignedTransaction() {
-        let signedTransaction = await this.signTransaction();
-        this.signedTransactions.push(signedTransaction);
-    }
-
-    sendRawTransaction() {
-        if (this.signedTransactions.length > 0) {
-            let serializedTx = this.signedTransactions[0].serialize();
-            let rawTx = '0x' + serializedTx.toString('hex');
-            let ethSendRawTransaction = {
+    async sendRawTransaction(txParams) {
+        const signedTransaction = await this.signTransaction(txParams);
+        if (signedTransaction) {
+            const serializedTx = signedTransaction.serialize();
+            const rawTx = '0x' + serializedTx.toString('hex');
+            const ethSendRawTransaction = {
                 "jsonrpc": "2.0",
                 "method": "eth_sendRawTransaction",
                 "params": [rawTx],
-                "id": 3 //さすがにmainnetで試せない
+                "id": 3 //さすがにmainnetで試せないが選べるように
             }
-            fetch('https://mainnet.infura.io/Y80MvxYEzKUddrYMy9Xj', {
+            fetch('https://ropsten.infura.io/Y80MvxYEzKUddrYMy9Xj', {
                 method: 'POST',
                 body: JSON.stringify(ethSendRawTransaction),
                 headers: new Headers({
                     'Content-Type': 'application/json'
                 })
             })
+            .then(res => res.json())
+            .then(res => res.result)
             .then(res => console.log(res))
             .catch(err => console.log(err));
         }
