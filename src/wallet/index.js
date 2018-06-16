@@ -78,11 +78,10 @@ class Wallet {
             transaction.nonce = nonce;
             transaction.gasPrice = '0x' + (1000000000).toString(16);
             transaction.gasLimit = '0x' + (21000).toString(16);
-            transaction.to = ''
-            transaction.value = ''
-            transaction.data = ''
-            transaction.value = ''
-            transaction.chainId = ''
+            transaction.to = '';
+            transaction.value = '';
+            transaction.data = '';
+            transaction.chainId = '';
             this.transactions.push(transaction);
         }
     }

@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import cyan from '@material-ui/core/colors/cyan';
+import { walletContext } from '../index';
 
 class Balance extends Component {
     constructor(props) {
@@ -60,28 +61,32 @@ class Balance extends Component {
         }
 
         return(
-            <div style={styles.wrap}>
-                <TextField 
-                    label="address"
-                    value={this.state.address}
-                    onChange={event => this.handleChange(event)}
-                    style={styles.inline}
-                />
-                <Button
-                    variant="outlined"
-                    onClick={() => this.getBalance()}
-                    style={Object.assign({}, styles.inline, styles.button)}
-                >
-                    get balance
-                </Button>
-                <Typography
-                    variant="body2"
-                    color="primary"
-                    style={Object.assign({}, styles.inline, styles.forSmall)}
-                >
-                    balance of address: {this.state.balance} ETH
-                </Typography>
-            </div>
+            <walletContext.Consumer>
+                {({balance, getBalance}) => (
+                    <div style={styles.wrap}>
+                        <TextField 
+                            label="address"
+                            value={this.state.address}
+                            onChange={event => this.handleChange(event)}
+                            style={styles.inline}
+                        />
+                        <Button
+                            variant="outlined"
+                            onClick={getBalance}
+                            style={Object.assign({}, styles.inline, styles.button)}
+                        >
+                            get balance
+                        </Button>
+                        <Typography
+                            variant="body2"
+                            color="primary"
+                            style={Object.assign({}, styles.inline, styles.forSmall)}
+                        >
+                            balance of address: {balance} ETH
+                        </Typography>
+                    </div>
+                )}
+            </walletContext.Consumer>
         );
     }
 }
