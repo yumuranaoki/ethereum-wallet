@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import Button from '@material-ui/core/Button';
 import { walletContext } from '../index';
 
 const StyledButton = styled.button`
@@ -18,18 +17,16 @@ const StyledButton = styled.button`
     }
 `;
 
-class GenerateMnemonicWord extends Component {
-    render() {
-        return(
-            <walletContext.Consumer>
-                {({generateMnemonicWord}) => (
-                    <StyledButton onClick={generateMnemonicWord}>
+function GenerateMnemonicWord() {
+  return (
+    <walletContext.Consumer>
+      {({ generateMnemonicWord }) => (
+        <StyledButton onClick={generateMnemonicWord}>
                         generate mnemonic word
-                    </StyledButton>
-                )}
-            </walletContext.Consumer>
-        );
-    }
+        </StyledButton>
+      )}
+    </walletContext.Consumer>
+  );
 }
 
 export default GenerateMnemonicWord;

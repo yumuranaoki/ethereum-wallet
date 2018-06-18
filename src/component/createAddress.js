@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
 import { walletContext } from '../index';
 
@@ -13,28 +12,37 @@ const StyledButton = styled.button`
     padding: 0 30px;
     box-shadow: 0 3px 5px 2px rgba(255, 105, 135, 0.3);
     margin: 10px;
+    float: left;
     &:hover {
         background: rgba(233, 76, 27, 0.61);
     }
 `;
 
-class CreateWallet extends Component {
-    constructor(props) {
-        super(props);
-    }
+const Address = styled.div`
+    float: left;
+    line-height: 48px;
+    margin: 10px
+`;
 
+const Wrap = styled.div`
+    overflow: hidden;
+`;
+
+class CreateWallet extends Component {
     render() {
         return(
             <walletContext.Consumer>
                 {({wallet, generateWallet}) => (
-                    <div>
+                    <Wrap>
                         <StyledButton
                             onClick={generateWallet}
                         >
-                            creste address
+                            create address
                         </StyledButton>
-                        address: {wallet.address}
-                    </div>
+                        <Address>
+                            address: {wallet.address}
+                        </Address>
+                    </Wrap>
                 )}
             </walletContext.Consumer>
         );

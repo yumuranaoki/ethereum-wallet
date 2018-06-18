@@ -1,85 +1,52 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import cyan from '@material-ui/core/colors/cyan';
+import styled from 'styled-components';
 import { walletContext } from '../index';
 
+const StyledButton = styled.button`
+    background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
+    border-radius: 3px;
+    border: 0;
+    color: white;
+    font-size: 1.2em;
+    height: 48px;
+    padding: 0 30px;
+    box-shadow: 0 3px 5px 2px rgba(255, 105, 135, 0.3);
+    margin: 10px;
+    float: left;
+    &:hover {
+        background: rgba(233, 76, 27, 0.61);
+    }
+`;
+
+const BalanceText = styled.div`
+    float: left;
+    line-height: 48px;
+    margin: 10px
+`;
+
+const Wrap = styled.div`
+    overflow: hidden;
+`;
+
 class Balance extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            address: '',
-            balance: ''
-        }
-    }
-
-    getBalance() {
-        const ethGetBalance = {
-            "jsonrpc":"2.0",
-            "method":"eth_getBalance",
-            "params":[this.state.address, "latest"],
-            "id":3
-        }
-        
-        fetch('https://ropsten.infura.io/Y80MvxYEzKUddrYMy9Xj', {
-            method: 'POST',
-            body: JSON.stringify(ethGetBalance),
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            })
-        })
-        .then(res => res.json())
-        .then(res => res.result)
-        .then(result => parseInt(result, 16) / 1000000000000000000)
-        .then(result => this.setState({balance: result}))
-        .catch(err => console.log(error));  
-    }
-
-    render() {
-        const styles = {
-            wrap: {
-                overflow: 'hidden'
-            },
-            inline: {
-                float: "left",
-                marginRight: 10,
-                marginBottom: 10
-            },
-            forSmall: {
-                marginTop: 10
-            },
-            button: {
-                backgroundColor: cyan[200],
-                color: 'white',
-                borderColor: cyan[300],
-            }
-        }
-
-        return(
-            <walletContext.Consumer>
-                {({balance, getBalance}) => (
-                    <div style={styles.wrap}>
-                        <Button
-                            variant="contained"
-                            color='secondary'
-                            onClick={getBalance}
-                            style={Object.assign({}, styles.inline, styles.button)}
-                        >
-                            get balance
-                        </Button>
-                        <Typography
-                            variant="body2"
-                            color="primary"
-                            style={Object.assign({}, styles.inline, styles.forSmall)}
-                        >
-                            balance of address: {balance} ETH
-                        </Typography>
-                    </div>
+  render() {
+    return (
+      <walletContext.Consumer>
+        {({ balance, getBalance }) => (
+          <Wrap>
+            <StyledButton
+              onClick={getBalance}
+            >
+              get balance
+            </StyledButton>
+            <BalanceText>
+              balance of address: {balance} ETH
+            </BalanceText>
+          </Wrap>
                 )}
-            </walletContext.Consumer>
-        );
-    }
+      </walletContext.Consumer>
+    );
+  }
 }
 
 export default Balance;

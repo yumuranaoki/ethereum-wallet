@@ -10,31 +10,27 @@ import GenerateMnemonicWord from './component/generateMnemonicWord';
 
 export const walletContext = createContext();
 
-//context api用のclass作成して、そこから継承
+// context api用のclass作成して、そこから継承
 class App extends Context {
-    constructor(props) {
-        super(props);
-    }
-    
-    render() {
-        return(
-            <walletContext.Provider value={this.state}>
-                <div>
-                    <Typography variant="display3">
+  render() {
+    return (
+      <walletContext.Provider value={this.state}>
+        <div>
+          <Typography variant="display3">
                         Ethereum wallet
-                    </Typography>
-                    <GenerateMnemonicWord />
-                    <CreateAddress />
-                    <Balance />
-                    <SendTransaction />
-                    <MnemonicWordModal />
-                </div>
-            </walletContext.Provider>
-        );
-    }
+          </Typography>
+          <GenerateMnemonicWord />
+          <CreateAddress />
+          <Balance />
+          <SendTransaction />
+          <MnemonicWordModal />
+        </div>
+      </walletContext.Provider>
+    );
+  }
 }
 
 ReactDOM.render(
-    <App />,
-    document.getElementById('root')
+  <App />,
+  document.getElementById('root'),
 );
