@@ -1,17 +1,31 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import { walletContext } from '../index';
 
-//onClickに対するactionをcontextで作成して、modalOpenを操作
+const StyledButton = styled.button`
+    background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
+    border-radius: 3px;
+    border: 0;
+    color: white;
+    font-size: 1.2em;
+    height: 48px;
+    padding: 0 30px;
+    box-shadow: 0 3px 5px 2px rgba(255, 105, 135, 0.3);
+    margin: 10px;
+    &:hover {
+        background: rgba(233, 76, 27, 0.61);
+    }
+`;
+
 class GenerateMnemonicWord extends Component {
     render() {
         return(
             <walletContext.Consumer>
                 {({generateMnemonicWord}) => (
-                    <Button color="primary" onClick={generateMnemonicWord}>
+                    <StyledButton onClick={generateMnemonicWord}>
                         generate mnemonic word
-                    </Button>
+                    </StyledButton>
                 )}
             </walletContext.Consumer>
         );

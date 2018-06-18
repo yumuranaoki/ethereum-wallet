@@ -61,7 +61,8 @@ class Balance extends Component {
                 {({balance, getBalance}) => (
                     <div style={styles.wrap}>
                         <Button
-                            variant="outlined"
+                            variant="contained"
+                            color='secondary'
                             onClick={getBalance}
                             style={Object.assign({}, styles.inline, styles.button)}
                         >

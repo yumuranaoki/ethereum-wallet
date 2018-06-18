@@ -1,6 +1,22 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
+import styled from 'styled-components';
 import { walletContext } from '../index';
+
+const StyledButton = styled.button`
+    background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
+    border-radius: 3px;
+    border: 0;
+    color: white;
+    font-size: 1.2em;
+    height: 48px;
+    padding: 0 30px;
+    box-shadow: 0 3px 5px 2px rgba(255, 105, 135, 0.3);
+    margin: 10px;
+    &:hover {
+        background: rgba(233, 76, 27, 0.61);
+    }
+`;
 
 class CreateWallet extends Component {
     constructor(props) {
@@ -12,13 +28,11 @@ class CreateWallet extends Component {
             <walletContext.Consumer>
                 {({wallet, generateWallet}) => (
                     <div>
-                        <Button
-                            variant="contained"
-                            color='secondary'
+                        <StyledButton
                             onClick={generateWallet}
                         >
-                            CREATE ADDRESS
-                        </Button>
+                            creste address
+                        </StyledButton>
                         address: {wallet.address}
                     </div>
                 )}

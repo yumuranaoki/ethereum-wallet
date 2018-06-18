@@ -70,6 +70,9 @@ class SendTransaction extends Component {
                 backgroundColor: cyan[200],
                 color: 'white',
                 borderColor: cyan[300],
+                ':hover': {
+                    backgroundColor: cyan[700],
+                },
             }
         }
 
@@ -102,7 +105,8 @@ class SendTransaction extends Component {
                             style={styles.inline}
                         />
                         <Button
-                            variant="outlined"
+                            variant="contained"
+                            color='secondary'
                             onClick={() => this.sendTransaction(balance, wallet)}
                             style={Object.assign({}, styles.inline, styles.button)}
                         >
