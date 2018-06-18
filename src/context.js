@@ -1,20 +1,36 @@
 import React, { Component } from 'react';
 import Wallet from './wallet/index';
+import { generateMnemonicWord } from './wallet/mnemonic';
 
 class Context extends Component {
     constructor(props) {
         super(props);
 
-        this.generateWallet = () => {
+        this.generateMnemonicWord = () => {
             const wallet = new Wallet();
-            wallet.generatePrivateKey();
-            wallet.generatePublicKey();
-            wallet.generateAddress();
+            wallet.generateMnemonicWord()
             this.setState({wallet: wallet});
+            this.setState({modalOpen: true});
+        }
+
+        this.closeModal = () => {
+            this.setState({modalOpen: false})
+        }
+
+        this.generateWallet = () => {
+            if (this.state.wallet.mnemonicWord) {
+                const wallet = this.state.wallet;
+                wallet.generatePrivateKey();
+                wallet.generatePublicKey();
+                wallet.generateAddress();
+                console.log(this.state.wallet.address)
+                this.setState({wallet: wallet});
+                this.getBalance()
+            }
         }
 
         this.getBalance = () => {
-            if (this.state.wallet) {
+            if (this.state.wallet.privateKey) {
                 const ethGetBalance = {
                     "jsonrpc":"2.0",
                     "method":"eth_getBalance",
@@ -37,23 +53,18 @@ class Context extends Component {
             }
         }
 
-        this.sendTransaction = () => {
-            if (this.state.wallet) {
-                console.log(this.state.wallet.address);
-                this.state.wallet.sendRawTransaction();
-            }　else {
-                //有効なprivate keyがないと表示
-            }
-        }
+        //sendRawTransactionはsendRawTransaction.jsで処理
 
         this.state = {
             wallet: {
                 address: '',
             },
             balance: null,
+            modalOpen: false,            
+            generateMnemonicWord: this.generateMnemonicWord,
+            closeModal: this.closeModal,
             generateWallet: this.generateWallet,
             getBalance: this.getBalance,
-            sendTransaction: this.sendTransaction,
         }
     }
 }

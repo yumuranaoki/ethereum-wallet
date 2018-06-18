@@ -2,10 +2,11 @@ import React, { createContext } from 'react';
 import ReactDOM from 'react-dom';
 import Typography from '@material-ui/core/Typography';
 import Context from './context';
-import BlockNumber from './component/blockNumber';
 import Balance from './component/balance';
 import CreateAddress from './component/createAddress';
 import SendTransaction from './component/sendTransaction';
+import MnemonicWordModal from './wallet/mnemonicWordModal';
+import GenerateMnemonicWord from './component/generateMnemonicWord';
 
 export const walletContext = createContext();
 
@@ -22,10 +23,11 @@ class App extends Context {
                     <Typography variant="display3">
                         Ethereum wallet
                     </Typography>
-                    <BlockNumber />
-                    <Balance />
+                    <GenerateMnemonicWord />
                     <CreateAddress />
+                    <Balance />
                     <SendTransaction />
+                    <MnemonicWordModal />
                 </div>
             </walletContext.Provider>
         );

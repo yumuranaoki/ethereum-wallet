@@ -3,25 +3,30 @@ import { keccak256 } from 'js-sha3';
 import eccrypto from 'eccrypto';
 import EthereumTx from 'ethereumjs-tx';
 import 'babel-polyfill';
+import { generateMnemonicWord, fromSeed } from './mnemonic';
 
 const ecdsa = new ec('secp256k1');
 
-//sateで管理したい
-//メソッドをどこまで区切るかを再考
+
 class Wallet {
     constructor() {
-        this.privateKey = '';
-        this.publicKey = '';
+        this.mnemonicWord = null;
+        this.privateKey = null;
+        this.publicKey = null;
         this.address = '';
     }
 
+    generateMnemonicWord() {
+        const mnemonicWord = generateMnemonicWord();
+        this.mnemonicWord = mnemonicWord;
+    }
+
     generatePrivateKey() {
-        const character = "abcdef0123456789";
-        const characterLength = character.length;                
-        for(let i=0; i<64; i++){
-            this.privateKey += character[Math.floor(Math.random()*characterLength)];
-        } 
-        this.privateKey = Buffer.from(this.privateKey, 'hex');
+        //passphraseを入力してもらう
+        if (this.mnemonicWord) {
+            const [privateKey, chainCode] = fromSeed(this.mnemonicWord, '');
+            this.privateKey = privateKey
+        }
     }
 
     generatePublicKey() {

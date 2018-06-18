@@ -37,16 +37,19 @@ class SendTransaction extends Component {
         }
     }
 
-    sendTransaction(wallet) {
-        const txParams = {
-            gasLimit: this.state.gasLimit,
-            gasPrice: this.state.gasPrice,
-            toAddress: this.state.toAddress,
-            value: this.state.value,
-            chainId: this.state.chainId,
+    sendTransaction(balance, wallet) {
+        if (wallet.privateKey && balance*1000000000000000000 >= this.state.value + this.state.gasPrice*this.state.gasLimit) {
+            const txParams = {
+                gasLimit: this.state.gasLimit,
+                gasPrice: this.state.gasPrice,
+                toAddress: this.state.toAddress,
+                value: this.state.value,
+                chainId: this.state.chainId,
+            }
+            wallet.sendRawTransaction(txParams);
+        } else {
+            
         }
-        console.log(txParams);
-        wallet.sendRawTransaction(txParams);
     }
 
     render() {
@@ -72,7 +75,7 @@ class SendTransaction extends Component {
 
         return(
             <walletContext.Consumer>
-                {({wallet}) => (
+                {({balance, wallet}) => (
                     <div style={styles.wrap}>
                         <TextField 
                             label="to address"
@@ -100,7 +103,7 @@ class SendTransaction extends Component {
                         />
                         <Button
                             variant="outlined"
-                            onClick={() => this.sendTransaction(wallet)}
+                            onClick={() => this.sendTransaction(balance, wallet)}
                             style={Object.assign({}, styles.inline, styles.button)}
                         >
                             send transaction

@@ -14,10 +14,6 @@ class Balance extends Component {
         }
     }
 
-    handleChange(event) {
-        this.setState({address: event.target.value})
-    }
-
     getBalance() {
         const ethGetBalance = {
             "jsonrpc":"2.0",
@@ -37,7 +33,7 @@ class Balance extends Component {
         .then(res => res.result)
         .then(result => parseInt(result, 16) / 1000000000000000000)
         .then(result => this.setState({balance: result}))
-        .catch(err => console.log(error));
+        .catch(err => console.log(error));  
     }
 
     render() {
@@ -64,12 +60,6 @@ class Balance extends Component {
             <walletContext.Consumer>
                 {({balance, getBalance}) => (
                     <div style={styles.wrap}>
-                        <TextField 
-                            label="address"
-                            value={this.state.address}
-                            onChange={event => this.handleChange(event)}
-                            style={styles.inline}
-                        />
                         <Button
                             variant="outlined"
                             onClick={getBalance}
