@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Wallet from './wallet/index';
-import { generateMnemonicWord } from './wallet/mnemonic';
 
 class Context extends Component {
     constructor(props) {
@@ -9,13 +8,13 @@ class Context extends Component {
         this.generateMnemonicWord = () => {
             const wallet = new Wallet();
             wallet.generateMnemonicWord()
-            this.setState({wallet: wallet});
-            this.setState({modalOpen: true});
-        }
+            this.setState({ wallet });
+            this.setState({ modalOpen: true });
+        };
 
         this.closeModal = () => {
-            this.setState({modalOpen: false})
-        }
+            this.setState({ modalOpen: false })
+        };
 
         this.generateWallet = () => {
             if (this.state.wallet.mnemonicWord) {
@@ -23,11 +22,10 @@ class Context extends Component {
                 wallet.generatePrivateKey();
                 wallet.generatePublicKey();
                 wallet.generateAddress();
-                console.log(this.state.wallet.address)
                 this.setState({wallet: wallet});
                 this.getBalance()
             }
-        }
+        };
 
         this.getBalance = () => {
             if (this.state.wallet.privateKey) {
@@ -53,7 +51,7 @@ class Context extends Component {
             }
         }
 
-        //sendRawTransactionはsendRawTransaction.jsで処理
+        // sendRawTransactionはsendRawTransaction.jsで処理
 
         this.state = {
             wallet: {
