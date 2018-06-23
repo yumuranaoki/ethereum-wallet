@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import TextField from '@material-ui/core/TextField';
+import { keccak256 } from 'js-sha3';
 import { walletContext } from '../index';
 
 const StyledButton = styled.button`
@@ -15,7 +16,7 @@ const StyledButton = styled.button`
     margin: 10px;
     float: left;
     &:hover {
-        background: rgba(233, 76, 27, 0.61);
+      background: rgba(233, 76, 27, 0.61);
     }
 `;
 
@@ -29,16 +30,17 @@ const Wrap = styled.div`
     overflow: hidden;
 `;
 
-class SendTransaction extends Component {
+class SendERC20 extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      contractAddress: '0xd26114cd6EE289AccF82350c8d8487fedB8A0C07',
       toAddress: '',
       value: '',
       gasLimit: 21000,
       gasPrice: 4000000000,
       chainId: 3, // あとで選択可能に
-      txHash: '',
+      balance: 0,
     };
   }
 
@@ -61,21 +63,60 @@ class SendTransaction extends Component {
     }
   }
 
-  async sendTransaction(balance, wallet) {
+  // addressのbalanceを取得
+  // sendTokenの中で呼ぶ場合は値をreturnしてawaitで呼ぶ
+  async getBalanceOfToken(wallet) {
+    // ここでtxParamsを定義してwalletのメソッドにパスする
     if (
       wallet.privateKey &&
-      balance * 1000000000000000000 >=
-      (this.state.value * 1000000000000000000) + (this.state.gasPrice * this.state.gasLimit)
+      this.state.contractAddress.length > 0
     ) {
+      const method = keccak256('balanceOf(address)').slice(0, 8);
+      const address = '000000000000000000000000' + wallet.address.slice(2);
+      const data = '0x' + method + address;
       const txParams = {
+        to: this.state.contractAddress,
+        data,
+      };
+      let result = await wallet.call(txParams);
+      result = parseInt(result, 16);
+      return result;
+    }
+  }
+
+  async sendToken(balance, wallet) {
+    // contractAddressがセットされているか確認
+    // walletのaddressのbalanceを確認して、balanceがvalueより多いことを確認(walletのメソッドを作成)
+    // data propertyを構築
+    // 0x
+    // transfer(address,uint256)のkeccak256の4byte
+    // to(toAddress)を256bitに
+    // tokens(value)を256bitに(0xはいらない)
+    // txParamsを作成
+    // sendRawTransaction(txParams)
+    // resultを受ける
+    const tokenBalance = await this.getBalanceOfToken(wallet);
+    if (
+      wallet.privateKey &&
+      this.state.contractAddress.length > 0 &&
+      balance * 1000000000000000000 >= this.state.gasPrice * this.state.gasLimit &&
+      tokenBalance >= this.state.value
+    ) {
+      const method = keccak256('transfer(address,uint)').slice(0, 9);
+      const toAddress = '000000000000000000000000' + this.state.toAddress.slice(2);
+      // valueを16進数に変換して、32byteに
+      const value = 
+        ('0000000000000000000000000000000000000000000000000000000000000000' +
+        (this.state.value * 1000000000000000000).toString(16)).slice(-64);
+      const data = '0x' + method + toAddress + value;
+      //txParamsにchainIdとかがいるかも
+      const txParams = {
+        to: this.state.contractAddress,
         gasLimit: this.state.gasLimit,
         gasPrice: this.state.gasPrice,
-        toAddress: this.state.toAddress,
-        value: this.state.value * 1000000000000000000,
-        chainId: this.state.chainId,
+        data,
       };
       const result = await wallet.sendRawTransaction(txParams);
-      this.setState({ txHash: result });
     }
   }
 
@@ -84,6 +125,9 @@ class SendTransaction extends Component {
       <walletContext.Consumer>
         {({ balance, wallet }) => (
           <Wrap>
+            <TextFields>
+              token {this.state.balance}
+            </TextFields>
             <TextFields>
               <TextField
                 label="to address"
@@ -113,13 +157,11 @@ class SendTransaction extends Component {
               />
             </TextFields>
             <StyledButton
-              onClick={() => this.sendTransaction(balance, wallet)}
+              onClick={() => this.sendToken(balance, wallet)}
             >
-              send transaction
+              send token
             </StyledButton>
-            <TextFields>
-              {this.state.txHash}
-            </TextFields>
+            <button onClick={() => this.test(wallet)} />
           </Wrap>
         )}
       </walletContext.Consumer>
@@ -127,4 +169,4 @@ class SendTransaction extends Component {
   }
 }
 
-export default SendTransaction;
+export default SendERC20;

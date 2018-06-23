@@ -5,9 +5,6 @@ import EthereumTx from 'ethereumjs-tx';
 import 'babel-polyfill';
 import { generateMnemonicWord, fromSeed } from './mnemonic';
 
-const ecdsa = new ec('secp256k1');
-
-
 class Wallet {
     constructor() {
         this.mnemonicWord = null;
@@ -70,23 +67,24 @@ class Wallet {
     }
 
     async signTransaction(txParams) {
-        if (this.privateKey) {
-            let transaction = {}
-            let nonce = await this.getNonce()
-            transaction.nonce = nonce;
-            transaction.gasPrice = '0x' + parseInt(txParams.gasPrice, 10).toString(16);
-            transaction.gasLimit = '0x' + parseInt(txParams.gasLimit, 10).toString(16);
-            transaction.to = txParams.toAddress;
-            transaction.value = '0x' + parseInt(txParams.value, 10).toString(16);
-            transaction.chainId = txParams.chainId;
-            return new Promise(resolve => {
-                let tx = new EthereumTx(transaction);
-                tx.sign(this.privateKey);
-                resolve(tx);
-            })
-        }
+			if (this.privateKey) {
+					let transaction = {}
+					let nonce = await this.getNonce()
+					transaction.nonce = nonce;
+					transaction.gasPrice = '0x' + parseInt(txParams.gasPrice, 10).toString(16);
+					transaction.gasLimit = '0x' + parseInt(txParams.gasLimit, 10).toString(16);
+					transaction.to = txParams.toAddress;
+					transaction.value = '0x' + parseInt(txParams.value, 10).toString(16);
+					transaction.chainId = txParams.chainId;
+					return new Promise(resolve => {
+							const tx = new EthereumTx(transaction);
+							tx.sign(this.privateKey);
+							resolve(tx);
+					});
+			}
     }
 
+	// promiseを返してコードの汎用性を高める
     async sendRawTransaction(txParams) {
         const signedTransaction = await this.signTransaction(txParams);
         if (signedTransaction) {
@@ -97,20 +95,50 @@ class Wallet {
                 "method": "eth_sendRawTransaction",
                 "params": [rawTx],
                 "id": 3 //さすがにmainnetで試せないが選べるように
-            }
-            fetch('https://ropsten.infura.io/Y80MvxYEzKUddrYMy9Xj', {
+						}
+						return new Promise((resolve) => {
+							fetch('https://ropsten.infura.io/Y80MvxYEzKUddrYMy9Xj', {
                 method: 'POST',
                 body: JSON.stringify(ethSendRawTransaction),
                 headers: new Headers({
                     'Content-Type': 'application/json'
                 })
-            })
-            .then(res => res.json())
-            .then(res => res.result)
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
+							})
+							.then(res => res.json())
+							.then(res => res.result)
+							.then(res => resolve(res))
+							.catch(err => console.log(err));
+						})
         }
     }
+
+  call(txParams) {
+    const ethCall = {
+			"jsonrpc": "2.0",
+			"method": "eth_call",
+			"params":	[
+				{
+					"to": txParams.to,
+					"data": txParams.data,
+				},
+				 "latest"
+			],
+			"id": 1
+		}
+		return new Promise(resolve => {
+			fetch('https://mainnet.infura.io/Y80MvxYEzKUddrYMy9Xj', {
+				method: 'POST',
+				body: JSON.stringify(ethCall),
+				headers: new Headers({
+					'Content-Type': 'application/json'
+				})
+			})
+			.then(res => res.json())
+			.then(res => res.result)
+			.then(res => resolve(res))
+			.catch(err => console.log(err));
+		});
+  }
 }
 
 export default Wallet;

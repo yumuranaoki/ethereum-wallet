@@ -5,6 +5,7 @@ import Context from './context';
 import Balance from './component/balance';
 import CreateAddress from './component/createAddress';
 import SendTransaction from './component/sendTransaction';
+import SendERC20 from './component/sendERC20';
 import MnemonicWordModal from './wallet/mnemonicWordModal';
 import GenerateMnemonicWord from './component/generateMnemonicWord';
 
@@ -23,6 +24,7 @@ class App extends Context {
           <CreateAddress />
           <Balance />
           <SendTransaction />
+          <SendERC20 />
           <MnemonicWordModal />
         </div>
       </walletContext.Provider>

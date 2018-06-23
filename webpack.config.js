@@ -1,6 +1,6 @@
 module.exports = {
     mode: 'development',
-    entry: __dirname + "/src/index.js",
+    entry: __dirname + "/src/index.jsx",
     watch: true,
     output: {
         path: __dirname + "/public/javascript",

@@ -13,7 +13,7 @@ class Context extends Component {
         };
 
         this.closeModal = () => {
-            this.setState({ modalOpen: false })
+            this.setState({ modalOpen: false });
         };
 
         this.generateWallet = () => {
@@ -22,20 +22,19 @@ class Context extends Component {
                 wallet.generatePrivateKey();
                 wallet.generatePublicKey();
                 wallet.generateAddress();
-                this.setState({wallet: wallet});
-                this.getBalance()
+                this.setState({ wallet });
+                this.getBalance();
             }
         };
 
         this.getBalance = () => {
             if (this.state.wallet.privateKey) {
                 const ethGetBalance = {
-                    "jsonrpc":"2.0",
-                    "method":"eth_getBalance",
-                    "params":[this.state.wallet.address, "latest"],
-                    "id":3
-                }
-                
+                    "jsonrpc": "2.0",
+                    "method": "eth_getBalance",
+                    "params": [this.state.wallet.address, "latest"],
+                    "id":3,
+                };
                 fetch('https://ropsten.infura.io/Y80MvxYEzKUddrYMy9Xj', {
                     method: 'POST',
                     body: JSON.stringify(ethGetBalance),
@@ -46,10 +45,10 @@ class Context extends Component {
                 .then(res => res.json())
                 .then(res => res.result)
                 .then(result => parseInt(result, 16) / 1000000000000000000)
-                .then(result => this.setState({balance: result}))
+                .then(result => this.setState({ balance: result }))
                 .catch(err => console.log(error));
             }
-        }
+        };
 
         // sendRawTransactionはsendRawTransaction.jsで処理
 
